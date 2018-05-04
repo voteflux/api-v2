@@ -78,12 +78,12 @@ functions:
           path: /test/hello
           method: get
   genStatsGetinfo:
-    handler: handler.genStatsGetinfo
+    handler: flux.handlers.stats.genStatsGetinfo
     timeout: 60
     events:
       - schedule: rate(1 minute)
   genStatsPublic:
-    handler: handler.genStatsPublic
+    handler: flux.handlers.stats.genStatsPublic
     timeout: 60
     events:
       - schedule: rate(1 minute)

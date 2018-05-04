@@ -1,8 +1,8 @@
 // utilities for handlers
 
 
-const DB = require('./flux/db')
-const utils = require('./flux/utils')
+const DB = require('../db')
+const utils = require('../utils')
 
 
 const default200Response = {
