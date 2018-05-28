@@ -4,6 +4,16 @@ const R = require('ramda')
 
 this.j = obj => JSON.stringify(obj, null, 2),
 
+this.mkPromise = f => (...args) => new Promise((resolve, reject) => {
+    f(...args, (err, resp) => {
+        if (err)
+            return reject(err);
+        return resolve(resp);
+    })
+})
+
+
+
 this.all_states = ['nsw', 'qld', 'sa', 'nt', 'act', 'vic', 'wa', 'tas', 'nostate', 'weirdstate']
 
 this.state_regex = s => {

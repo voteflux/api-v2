@@ -37,15 +37,21 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
   } catch (_err) {
     err = _err
     didError = true
+    if (err.message.indexOf("Cannot destructure property") >= 0) {
+      const field = err.message.split('`')[1];
+      if (field) {
+        err = `Field '${field}' is required.`
+      }
+    }
     console.error(`Function ${fName} errored: ${err}`)
   } finally {
     await db.close()
   }
 
-  console.log(`Got Response from: ${fName} \n- err: ${j(err)}, \n- resp: ${j(resp)}`);
+  console.log(`Got Response from: ${fName} \n- err: ${err}, \n- resp: ${j(resp)}`);
 
   if (didError) {
-    console.log(`Throwing... Error:\n${j(err)}`)
+    console.log(`Throwing... Error:\n${err}`)
     throw err
   }
   if (resp.statusCode === undefined) {
