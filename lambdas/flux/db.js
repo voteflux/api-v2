@@ -15,7 +15,7 @@ R.log = o => {
     return o;
 }
 const MongoClient = require('mongodb').MongoClient;
-
+const {ObjectID} = require('bson');
 
 const utils = require('./utils')
 
@@ -109,7 +109,7 @@ const findByState = async (qGen) => await queryByState((q) => dbv1.users.find(q)
 
 /* SPECIFIC DB CALLS */
 
-// Member Calls
+/* Aggregate Member Calls */
 
 const n_members_by_state = async () =>
     await countByState(s => ({'$and': [_onRoll, _stateConsent, _userInState(s)]}))
@@ -154,6 +154,27 @@ const count_validation_queue_state = async () =>
 
 const count_volunteers = () => count_members(_volunteer)
 
+
+/* Member Specific Calls */
+
+/* User calls */
+
+const getUidFromS = async s =>
+    await dbv1.findOne({s}, {projection: {_id: 1}})
+
+const getUserFromS = async s =>
+    await dbv1.findOne({s})
+
+const getUserFromUid = async idRaw => {
+    const _id = R.is(ObjectID, idRaw) ? idRaw : new ObjectID(idRaw);
+    return await dbv1.findOne({_id})
+}
+
+/* Role Calls */
+
+const getRoleFor = async uid => {
+
+}
 
 /* STATS */
 
