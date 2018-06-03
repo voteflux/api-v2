@@ -81,12 +81,6 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: /test/hello
-          method: get
   genStatsGetinfo:
     handler: flux/handlers/stats.genStatsGetinfo
     timeout: 60
@@ -97,15 +91,24 @@ functions:
     timeout: 60
     events:
       - schedule: rate(1 minute)
-
-  checkEmail:
-    handler: flux/handlers/login.checkEmail
-    iamRoleStatementsInherit: true
-    iamRoleStatements: ${self:custom.iam.cognitoAdmin}
+  getRoles:
+    handler: flux/handlers/user.getRoles
     events:
       - http:
-          path: /user/check_email
+          path: /user/get_roles
           method: post
+
+  # checkEmail:
+  #   handler: flux/handlers/login.checkEmail
+  #   iamRoleStatementsInherit: true
+  #   iamRoleStatements: ${self:custom.iam.cognitoAdmin}
+  #   events:
+  #     - http:
+  #         path: /user/check_email
+  #         method: post
+
+
+
   # getStats:
   #   handler: handler.getStats
   #   events:
