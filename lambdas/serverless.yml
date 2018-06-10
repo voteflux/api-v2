@@ -23,10 +23,12 @@ plugins:
 # frameworkVersion: "=X.X.X"
 
 custom:
-  profile: ${file(sls-custom.yml):profile}
-  stage: ${file(sls-custom.yml):stage}
-  customDomain: ${file(sls-${self:provider.stage}-domain.yml)}
-  cognito: ${file(sls-${self:provider.stage}-cognito.yml):cognito}
+  defaults:
+    profile: 'flux-api'
+  # profile: ${file(./sls-custom.yml):profile}
+  stage: ${file(./sls-custom.yml):stage}
+  customDomain: ${file(./sls-${self:provider.stage}-domain.yml)}
+  # cognito: ${file(./sls-${self:provider.stage}-cognito.yml):cognito}
   iam:
     cognitoAdmin:
       - Effect: "Allow"
@@ -38,14 +40,14 @@ provider:
   region: ap-southeast-2
   # region: us-east-1
   runtime: nodejs8.10
-  profile: flux-api
+  profile: ${self:custom.profile, self:custom.defaults.profile}
   stage: ${opt:stage, self:custom.stage}
   memorySize: 128
   environment:
     MONGODB_URI: ${ssm:${self:provider.stage}MongoDbUri}
     STAGE: ${self:provider.stage}
-    USER_POOL_ID: ${self:custom.cognito.poolId}
-    CLIENT_ID: ${self:custom.cognito.clientId}
+    # USER_POOL_ID: ${self:custom.cognito.poolId}
+    # CLIENT_ID: ${self:custom.cognito.clientId}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -95,7 +97,7 @@ functions:
     handler: flux/handlers/user.getRoles
     events:
       - http:
-          path: /user/get_roles
+          path: /v2/user/getRoles
           method: post
 
   # checkEmail:

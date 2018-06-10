@@ -41,6 +41,9 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
       const field = err.message.split('`')[1];
       if (field) {
         err = `Field '${field}' is required.`
+      } else if (process.env.STAGE !== 'dev') {
+        console.error(_err);
+        err = "An unknown error occurred. It has been logged."
       }
     }
     console.error(`Function ${fName} errored: ${err}`)
@@ -48,7 +51,7 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
     await db.close()
   }
 
-  console.log(`Got Response from: ${fName} \n- err: ${err}, \n- resp: ${j(resp)}`);
+  console.log(`Got Response from: ${fName} \n- err: ${err}, \n- resp: ${j(resp).slice(0,256)}`);
 
   if (didError) {
     console.log(`Throwing... Error:\n${err}`)

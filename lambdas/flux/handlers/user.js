@@ -5,26 +5,20 @@ const R = require('ramda')
 const db = {};  // we will populate this obj later via DB.init(db)
 
 const utils = require('../utils')
-const aws = require('aws-sdk');
-const cognito = require('../aws/cognito')
 const handlerUtils = require('./handlerUtils')
 
+const auth = require('./auth')(db);
 
-module.exports.checkEmail = async (event, context) => {
-    return {error: 503}
 
-    const {email} = event;
+module.exports.getRoles = auth.user(async (event, context, {user}) => {
+    const {_id} = user;
 
-    const p = {
-        ...cognito.common,
-        AttributesToGet: null,
+    return {
+        roles: await db.getUserRoles(_id),
+        status: 'okay',
+        error: ''
     }
-    const r = await cognito.identity.listUsers(p)
-    console.log(r);
-
-    return {};
-};
-
+});
 
 
 // Last part of file - wrap all handlers to automatically JSON.stringify responses
