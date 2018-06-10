@@ -27,6 +27,7 @@ custom:
     profile: 'flux-api'
   # profile: ${file(./sls-custom.yml):profile}
   stage: ${file(./sls-custom.yml):stage}
+  # region: ${file(./sls-custom.yml):region}
   customDomain: ${file(./sls-${self:provider.stage}-domain.yml)}
   # cognito: ${file(./sls-${self:provider.stage}-cognito.yml):cognito}
   iam:
@@ -37,8 +38,9 @@ custom:
 
 provider:
   name: aws
-  region: ap-southeast-2
-  # region: us-east-1
+  # region should be us-east-1 for prod
+  # region: ap-southeast-2
+  region: us-east-1
   runtime: nodejs8.10
   profile: ${self:custom.profile, self:custom.defaults.profile}
   stage: ${opt:stage, self:custom.stage}
@@ -100,6 +102,7 @@ functions:
           path: /v2/user/getRoles
           method: post
 
+
   # checkEmail:
   #   handler: flux/handlers/login.checkEmail
   #   iamRoleStatementsInherit: true
@@ -108,7 +111,6 @@ functions:
   #     - http:
   #         path: /user/check_email
   #         method: post
-
 
 
   # getStats:
