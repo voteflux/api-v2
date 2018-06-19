@@ -17,6 +17,7 @@ plugins:
   - serverless-domain-manager
   - serverless-dynamodb-local
   - serverless-iam-roles-per-function
+  - serverless-plugin-aws-alerts
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -35,6 +36,7 @@ custom:
       - Effect: "Allow"
         Action: "cognito-idp:*"
         Resource: "arn:aws:cognito-idp:*:*:userpool/*"
+  alerts: ${file(./sls-alerts.yaml):alerts}
 
 provider:
   name: aws

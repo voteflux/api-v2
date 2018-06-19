@@ -1,6 +1,6 @@
 
 const R = require('ramda')
-const handlerUtils = require('./flux/handlers/handlerUtils')
+const handlerUtils = require('./handlerUtils')
 
 const db = {};  // we will populate this obj later via DB.init(db)
 

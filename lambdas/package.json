@@ -21,8 +21,10 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.243.1",
+    "serverless": "^1.27.3",
     "serverless-domain-manager": "^2.3.6",
     "serverless-dynamodb-local": "^0.2.30",
-    "serverless-iam-roles-per-function": "^0.1.8"
+    "serverless-iam-roles-per-function": "^0.1.8",
+    "serverless-plugin-aws-alerts": "^1.2.4"
   }
 }
