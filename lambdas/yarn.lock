@@ -51,6 +51,10 @@ brace-expansion@^1.1.7:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
 
+bson@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bson/-/bson-3.0.0.tgz#2521fe6a9b88f3af155c27359a3847a80d50237b"
+
 bson@~1.0.4:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/bson/-/bson-1.0.9.tgz#12319f8323b1254739b7c6bef8d3e89ae05a2f57"
