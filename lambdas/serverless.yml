@@ -103,6 +103,7 @@ functions:
       - http:
           path: /v2/user/getRoles
           method: post
+          cors: true
 
 
   # checkEmail:
