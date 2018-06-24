@@ -3,29 +3,31 @@
 
 const DB = require('../db')
 const utils = require('../utils')
-
-
-const default200Response = {
-  statusCode: 200,
-  body: {
-    error: false
-  }
-}
-
+const R = utils.R;
 
 // convenience function for 200 responses
 const _r = body => ({
   statusCode: 200,
-  body: j({error: false, ...body})
+  body: JSON.stringify(body)
 });
 
 
-const beforeSend = response => {
+const beforeSend = (response) => {
   response.headers = utils.R.merge({
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "*"
   }, response.headers || {})
-  return response.headers
+  return response
+}
+
+
+const beforeEnter = f => (event, context) => {
+  if (R.is(String, event.body)) {
+    try {
+      event.body = JSON.parse(event.body)
+    } catch (e) {}
+  }
+  return f(event, context)
 }
 
 
@@ -42,7 +44,7 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
   try {
     await DB.init(db)  // this populates the global `db` object
     // f is presumed to be async
-    resp = await f(event, context)
+    resp = await beforeEnter(f)(event, context)
   } catch (_err) {
     err = _err
     didError = true
@@ -60,7 +62,7 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
     await db.close()
   }
 
-  console.log(`Got Response from: ${fName} \n- err: ${err}, \n- resp: ${j(resp).slice(0,256)}`);
+  console.log(`Got Response from: ${fName} \n- err: ${err}, \n- resp: ${j(resp || {}).slice(0,256)}`);
 
   if (didError) {
     console.log(`Throwing... Error:\n${err}`)
@@ -77,6 +79,5 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
 module.exports = {
   wrapHandler,
   j,
-  _r,
-  default200Response
+  _r
 }

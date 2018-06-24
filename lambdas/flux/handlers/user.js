@@ -15,8 +15,7 @@ module.exports.getRoles = auth.user(async (event, context, {user}) => {
 
     return {
         roles: await db.getUserRoles(_id),
-        status: 'okay',
-        error: ''
+        status: 'okay'
     }
 });
 

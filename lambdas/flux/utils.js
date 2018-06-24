@@ -3,7 +3,7 @@ this.R = R
 
 // utils module to avoid repeating common operations.
 
-this.j = obj => JSON.stringify(obj, null, 2)
+this.j = obj => JSON.stringify(obj, null, 2) || ""
 
 this.mkPromise = f => (...args) => new Promise((resolve, reject) => {
     f(...args, (err, resp) => {
