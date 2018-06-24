@@ -20,6 +20,15 @@ const _r = body => ({
 });
 
 
+const beforeSend = response => {
+  response.headers = utils.R.merge({
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*"
+  }, response.headers || {})
+  return response.headers
+}
+
+
 // convenience for sz-ing json
 const j = utils.j
 
@@ -58,9 +67,9 @@ const wrapHandler = (db) => (f, fName, obj) => async (event, context) => {
     throw err
   }
   if (resp.statusCode === undefined) {
-    return _r(resp);
+    return beforeSend(_r(resp));
   } else {
-    return resp;
+    return beforeSend(resp);
   }
 }
 

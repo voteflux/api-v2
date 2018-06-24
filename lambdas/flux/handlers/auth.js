@@ -1,17 +1,16 @@
 const R = require('ramda');
 
 const auth = (db) => ({
-
     user: (f) => async (event, context) => {
 
         const fail = msg => ({statusCode: 403, body: msg})
 
         if (!event.s) {
             if (!event.authToken) {
-                return fail('auth required')
+                return fail('no auth')
             } else {
                 // implement authToken later
-                return fail('auth required')
+                return fail('authToken not yet implemented')
             }
         }
 
@@ -20,7 +19,7 @@ const auth = (db) => ({
                 return fail('bad auth')
             }
         } else {
-            return fail('bad auth')
+            return fail('bad s param')
         }
 
         const user = await db.getUserFromS(event.s)
@@ -28,9 +27,9 @@ const auth = (db) => ({
         if (user && user.s === event.s) {
             return await f(event, context, {user});
         }
-        return fail('bad auth')
+        // default if above fails
+        return fail('auth failed')
     }
-
 })
 
 module.exports = auth;
