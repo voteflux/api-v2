@@ -9,7 +9,7 @@ const handlerUtils = require('./handlerUtils')
 
 const auth = require('./auth')(db);
 
-import { Roles } from '../roles'
+const { Roles } = require('../roles')
 
 
 module.exports.getDonations = auth.role(Roles.FINANCE, async (event, context, {user}) => {
@@ -20,7 +20,7 @@ module.exports.getDonations = auth.role(Roles.FINANCE, async (event, context, {u
     return {
         donations: await db.getDonations(pageN, limit),
         status: 'okay',
-        totalDonations,
+        ...utils.genPagination(totalDonations, limit, pageN)
     }
 });
 

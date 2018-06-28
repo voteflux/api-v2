@@ -13,7 +13,7 @@ this.mkPromise = f => (...args) => new Promise((resolve, reject) => {
     })
 })
 
-
+this.genPagination = (total, limit, pageN) => ({total, limit, pageN})
 
 this.all_states = ['nsw', 'qld', 'sa', 'nt', 'act', 'vic', 'wa', 'tas', 'nostate', 'weirdstate']
 
