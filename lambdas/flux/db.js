@@ -175,6 +175,14 @@ const count_validation_queue_state = async () =>
 
 const count_volunteers = () => count_members(_volunteer)
 
+/* Finance */
+
+const getDonations = async (pageN = 0, limit = 0) =>
+    await dbv1.donations.find({}, {sort: [['ts', 1]], limit, skip: pageN * limit}).toArray()
+
+const getDonationsN = async () =>
+    await dbv1.donations.count()
+
 
 /* Member Specific Calls */
 
@@ -257,17 +265,24 @@ const update_public_stats = async () => {
 module.exports = {
     init: async (dbObj) => {
         const dbMethods = {
+            /* meta */
             get_version,
+            /* members */
             count_members,
             n_members_by_state,
             n_members_validated,
             n_members_validated_state,
+            /* stats */
             update_getinfo_stats,
             update_public_stats,
+            /* personal / per member */
             getUserFromS,
             getUserFromUid,
             getUidFromS,
-            getUserRoles
+            getUserRoles,
+            /* finance */
+            getDonations,
+            getDonationsN,
         }
         R.mapObjIndexed((f, fName) => { dbObj[fName] = f }, dbMethods);
 

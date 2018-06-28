@@ -97,6 +97,7 @@ functions:
     timeout: 60
     events:
       - schedule: rate(1 minute)
+  # user requests
   getRoles:
     handler: flux/handlers/user.getRoles
     events:
@@ -104,7 +105,18 @@ functions:
           path: /v2/user/getRoles
           method: post
           cors: true
+  # admin/finance requests
+  getDonations:
+    handler: flux/handlers/admin-finance.getDonations
+    events:
+      - http:
+          path: /v2/finance/getDonations
+          method: post
+          cors: true
+  # admin/other requests
 
+
+  # random stuff from past
 
   # checkEmail:
   #   handler: flux/handlers/login.checkEmail
