@@ -12,15 +12,13 @@ const auth = require('./auth')(db);
 const { Roles } = require('../roles')
 
 
-module.exports.getDonations = auth.role(Roles.FINANCE, async (event, context, {user}) => {
-    const data = event.body;
-    const pageN = data.pageN || 0;
-    const limit = data.limit || 10;
-    const totalDonations = await db.getDonationsN()
+module.exports.getRoleAudit = auth.role(Roles.ADMIN, async (event, context, {user}) => {
+    const roleAuditRaw = await db.getRoleAudit()
+    // wipe `s` param
+    const roleAudit = R.map(role => ({ ...role, users: R.map(u => ({...u, s: '', password: ''}), role.users) }), roleAuditRaw)
     return {
-        donations: await db.getDonations(pageN, limit),
-        status: 'okay',
-        ...utils.genPagination(totalDonations, limit, pageN)
+        roleAudit,
+        status: 'okay'
     }
 });
 

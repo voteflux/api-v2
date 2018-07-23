@@ -113,8 +113,14 @@ functions:
           path: /v2/finance/getDonations
           method: post
           cors: true
+  # admin/role requests
+  getRoleAudit:
+    handler: flux/handlers/admin-roles.getRoleAudit
+    events:
+      - http:
+          path: /v2/admin/getRoleAudit
+          cors: true
   # admin/other requests
-
 
   # random stuff from past
 

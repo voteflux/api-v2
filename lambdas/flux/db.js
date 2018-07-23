@@ -177,7 +177,7 @@ const count_volunteers = () => count_members(_volunteer)
 
 /* Finance */
 
-const getDonations = async (pageN = 0, limit = 0) =>
+const getDonations = async (pageN = 0, limit = 10) =>
     await dbv1.donations.find({}, {sort: [['ts', 1]], limit, skip: pageN * limit}).toArray()
 
 const getDonationsN = async () =>
@@ -201,10 +201,23 @@ const getUserFromUid = async userId => {
 
 /* Role Calls */
 
+// Role schema: {role: string, uids: uid[], _id}
+
 const getUserRoles = async userId => {
     const _id = cleanId(userId)
-    rolesAll = await dbv1.roles.find({'uids': _id}).toArray()
+    const rolesAll = await dbv1.roles.find({'uids': _id}).toArray()
     return R.map(R.prop('role'), rolesAll)
+}
+
+/**
+ * Return a list of all roles along with the users that have each role.
+ * @returns {{role: string, users: User[]}[]} List of all roles as an object with keys `role` and `users`. The `users` key is a list of user objects.
+ */
+const getRoleAudit = async () => {
+    const rolesAll = await dbv1.roles.find({}).toArray()
+    const uniqueUserIDs = R.compose(R.uniq, R.reduce(R.concat, []), R.map(R.prop('uids')))(rolesAll)
+    const userMap = Promise.all(R.map(uid => getUserFromUid(uid).then(u => [uid, u]), uniqueUserIDs)).then(R.fromPairs)
+    return R.map(({role, uids}) => ({role, users: R.map(u => userMap[u], uids)}), rolesAll)
 }
 
 /* STATS */
@@ -283,6 +296,8 @@ module.exports = {
             /* finance */
             getDonations,
             getDonationsN,
+            /* admin */
+            getRoleAudit,
         }
         R.mapObjIndexed((f, fName) => { dbObj[fName] = f }, dbMethods);
 
