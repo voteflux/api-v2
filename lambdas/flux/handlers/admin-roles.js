@@ -14,8 +14,9 @@ const { Roles } = require('../roles')
 
 module.exports.getRoleAudit = auth.role(Roles.ADMIN, async (event, context, {user}) => {
     const roleAuditRaw = await db.getRoleAudit()
+    console.log(`roleAuditRawLen ${roleAuditRaw.length}`, roleAuditRaw)
     // wipe `s` param
-    const roleAudit = R.map(role => ({ ...role, users: R.map(u => ({...u, s: '', password: ''}), role.users) }), roleAuditRaw)
+    const roleAudit = R.map(role => ({ ...role, users: R.map(utils.cleanUserDoc, role.users) }), roleAuditRaw)
     return {
         roleAudit,
         status: 'okay'

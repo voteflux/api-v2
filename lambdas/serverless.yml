@@ -119,6 +119,7 @@ functions:
     events:
       - http:
           path: /v2/admin/getRoleAudit
+          method: post
           cors: true
   # admin/other requests
 

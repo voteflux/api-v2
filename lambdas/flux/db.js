@@ -216,7 +216,7 @@ const getUserRoles = async userId => {
 const getRoleAudit = async () => {
     const rolesAll = await dbv1.roles.find({}).toArray()
     const uniqueUserIDs = R.compose(R.uniq, R.reduce(R.concat, []), R.map(R.prop('uids')))(rolesAll)
-    const userMap = Promise.all(R.map(uid => getUserFromUid(uid).then(u => [uid, u]), uniqueUserIDs)).then(R.fromPairs)
+    const userMap = await Promise.all(R.map(uid => getUserFromUid(uid).then(u => [uid, u]), uniqueUserIDs)).then(R.fromPairs)
     return R.map(({role, uids}) => ({role, users: R.map(u => userMap[u], uids)}), rolesAll)
 }
 

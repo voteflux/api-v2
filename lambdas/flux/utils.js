@@ -78,4 +78,14 @@ this.countPropInReduce = propName => (acc, obj) => {
 }
 
 
+const getProps = (props, user) => R.fromPairs(R.zip(props, R.props(props, user)))
+
+
+const staffSafeProps = [
+    'fname', 'sname', 'mnames', 'addr_suburb', 'addr_postcode', 'contact_number', 'email', 'member_comment',
+    'dobYear', 'volunteer', 'state_consent', 'onAECRoll', 'detailsValid', 'needsValidating', '_id'
+]
+this.cleanUserDoc = user => getProps(staffSafeProps, user)
+
+
 module.exports = this;
